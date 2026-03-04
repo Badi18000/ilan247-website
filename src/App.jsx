@@ -375,27 +375,17 @@ function App() {
             mobileMenuOpen
               ? "visible opacity-100"
               : "invisible opacity-0 pointer-events-none"
-          } transition-all duration-300`}
+          } overflow-y-auto transition-all duration-300`}
+          style={{ backgroundColor: "#ffffff" }}
           aria-hidden={!mobileMenuOpen}
         >
-          {/* Fond sombre opaque pour masquer le contenu derrière */}
-          <div
-            className="absolute inset-0 bg-slate-900"
-            onClick={() => setMobileMenuOpen(false)}
-            aria-hidden="true"
-          />
-          {/* Panneau du menu - fond blanc 100% opaque */}
-          <div
-            className="relative flex h-full w-full max-w-sm flex-col bg-white shadow-2xl"
-            style={{ backgroundColor: "#ffffff" }}
-          >
-            <nav className="flex flex-col gap-1 p-4">
+          <nav className="flex flex-col gap-1 p-6">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-xl px-4 py-3 text-lg font-medium text-slate-800 transition hover:bg-slate-100 hover:text-brand-600"
+                className="rounded-xl px-4 py-3 text-lg font-semibold text-slate-900 transition hover:bg-slate-100 hover:text-brand-600"
               >
                 {link.label}
               </a>
@@ -403,12 +393,11 @@ function App() {
             <a
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="btn-primary mt-4 w-full justify-center"
+              className="btn-primary mt-6 w-full justify-center"
             >
               Demander une soumission
             </a>
           </nav>
-          </div>
         </div>
       </header>
 
