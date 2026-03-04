@@ -370,36 +370,36 @@ function App() {
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
-        <div
-          className={`fixed inset-0 top-16 z-[60] md:hidden ${
-            mobileMenuOpen
-              ? "visible opacity-100"
-              : "invisible opacity-0 pointer-events-none"
-          } overflow-y-auto transition-all duration-300`}
-          style={{ backgroundColor: "#ffffff" }}
-          aria-hidden={!mobileMenuOpen}
-        >
-          <nav className="flex flex-col gap-1 p-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-xl px-4 py-3 text-lg font-semibold text-slate-900 transition hover:bg-slate-100 hover:text-brand-600"
-              >
-                {link.label}
-              </a>
-            ))}
-            <a
-              href="#contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className="btn-primary mt-6 w-full justify-center"
-            >
-              Demander une soumission
-            </a>
-          </nav>
-        </div>
       </header>
+
+      {/* Menu mobile - en dehors du header pour éviter les problèmes d'affichage */}
+      <div
+        className={`fixed inset-0 top-16 z-[100] overflow-y-auto bg-white transition-all duration-300 md:hidden ${
+          mobileMenuOpen ? "visible opacity-100" : "invisible opacity-0 pointer-events-none"
+        }`}
+        style={{ backgroundColor: "#ffffff" }}
+        aria-hidden={!mobileMenuOpen}
+      >
+        <nav className="flex flex-col gap-1 p-6">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-xl px-4 py-3 text-lg font-semibold text-slate-900 transition hover:bg-slate-100 hover:text-brand-600"
+            >
+              {link.label}
+            </a>
+          ))}
+          <a
+            href="#contact"
+            onClick={() => setMobileMenuOpen(false)}
+            className="btn-primary mt-6 w-full justify-center"
+          >
+            Demander une soumission
+          </a>
+        </nav>
+      </div>
 
       <main>
         <section id="accueil" className="relative overflow-hidden bg-slate-900">
