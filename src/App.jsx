@@ -371,14 +371,25 @@ function App() {
           </button>
         </div>
         <div
-          className={`fixed inset-0 top-16 z-40 bg-white md:hidden ${
+          className={`fixed inset-0 top-16 z-[60] md:hidden ${
             mobileMenuOpen
               ? "visible opacity-100"
               : "invisible opacity-0 pointer-events-none"
           } transition-all duration-300`}
           aria-hidden={!mobileMenuOpen}
         >
-          <nav className="flex flex-col gap-1 p-4">
+          {/* Fond sombre opaque pour masquer le contenu derrière */}
+          <div
+            className="absolute inset-0 bg-slate-900"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+          {/* Panneau du menu - fond blanc 100% opaque */}
+          <div
+            className="relative flex h-full w-full max-w-sm flex-col bg-white shadow-2xl"
+            style={{ backgroundColor: "#ffffff" }}
+          >
+            <nav className="flex flex-col gap-1 p-4">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -397,6 +408,7 @@ function App() {
               Demander une soumission
             </a>
           </nav>
+          </div>
         </div>
       </header>
 
