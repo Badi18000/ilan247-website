@@ -211,6 +211,7 @@ function App() {
           opacity: 0,
           duration: 0.7,
           ease: "power3.out",
+          immediateRender: false,
           scrollTrigger: {
             trigger: item,
             start: "top 85%",
@@ -480,7 +481,7 @@ function App() {
             </div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => (
-                <article key={service.title} className="group reveal-on-scroll card interactive-card overflow-hidden p-0">
+                <article key={service.title} className="group card interactive-card overflow-hidden p-0">
                   <div className="aspect-[4/3] overflow-hidden">
                     <img
                       src={service.image}
