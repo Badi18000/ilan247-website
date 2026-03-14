@@ -210,6 +210,7 @@ const navLinks = [
 function App() {
   const [heroImageIndex, setHeroImageIndex] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formStatus, setFormStatus] = useState("idle");
 
@@ -300,8 +301,21 @@ function App() {
   }, []);
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 16);
+      const currentY = window.scrollY;
+      setIsScrolled(currentY > 16);
+
+      if (currentY < 100) {
+        setHeaderVisible(true);
+      } else if (currentY < lastScrollY - 5) {
+        setHeaderVisible(true);
+      } else if (currentY > lastScrollY + 5) {
+        setHeaderVisible(false);
+      }
+
+      lastScrollY = currentY;
     };
 
     handleScroll();
@@ -405,10 +419,12 @@ function App() {
       <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
 
       <header
-        className={`sticky top-0 z-50 border-b backdrop-blur transition-all duration-300 ${
+        className={`sticky top-0 z-50 border-b backdrop-blur-md transition-all duration-300 ${
+          headerVisible ? "translate-y-0" : "-translate-y-full"
+        } ${
           isScrolled
-            ? "border-slate-200 bg-white/98 shadow-sm"
-            : "border-white/20 bg-white/88 shadow-none"
+            ? "border-slate-200 bg-white shadow-sm"
+            : "border-slate-200/60 bg-white/95 shadow-sm"
         }`}
       >
         <div className="section-container flex h-16 items-center justify-between">
@@ -468,16 +484,16 @@ function App() {
 
       <main>
         <section id="accueil" className="relative overflow-hidden bg-slate-900">
-          <img
-            src={heroImageSources[heroImageIndex]}
-            alt="Atelier d'impression publicitaire moderne à Montréal"
-            className="hero-bg absolute inset-0 h-full w-full object-cover object-[center_38%] opacity-65 brightness-110 md:object-[center_42%]"
-            onError={() => {
-              if (heroImageIndex < heroImageSources.length - 1) {
-                setHeroImageIndex((current) => current + 1);
-              }
-            }}
-          />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="hero-bg absolute inset-0 h-full w-full object-cover opacity-65 brightness-110"
+            poster={heroImageSources[0]}
+          >
+            <source src="/videos/hero-video.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-r from-accent-700/45 via-slate-900/40 to-slate-900/35" />
           <div className="section-container relative flex min-h-[78vh] flex-col justify-center py-20">
             <p className="hero-anim mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-brand-600/40 bg-brand-600/15 px-3 py-1 text-sm text-white/95">
