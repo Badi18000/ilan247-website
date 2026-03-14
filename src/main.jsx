@@ -4,6 +4,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import AppAltFonts from "./AppAltFonts";
 import RollupMontrealPage from "./RollupMontrealPage";
+import PolitiqueConfidentialite from "./PolitiqueConfidentialite";
+import ConditionsUtilisation from "./ConditionsUtilisation";
+import NotFound from "./NotFound";
 import "./index.css";
 
 // false = version actuelle (Rajdhani + IBM Plex Sans)
@@ -17,6 +20,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/roll-up-montreal" element={<RollupMontrealPage />} />
+        <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
+        <Route path="/conditions-utilisation" element={<ConditionsUtilisation />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

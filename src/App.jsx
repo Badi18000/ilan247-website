@@ -144,6 +144,13 @@ const processSteps = [
   },
 ];
 
+const values = [
+  { title: "Passion", desc: "S'engager pleinement dans chaque projet" },
+  { title: "Qualité", desc: "Bien faire ce que nous entreprenons" },
+  { title: "Réactivité", desc: "Disponibilité 24/7 pour vos urgences" },
+  { title: "Innovation", desc: "Technologies de pointe pour des résultats exceptionnels" },
+];
+
 const heroImageSources = [
   "/images/atelier-ilan247.png",
   "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?auto=format&fit=crop&w=2000&q=80",
@@ -164,13 +171,23 @@ const realizationsImages = [
   { src: "/images/services/lettrage-boulangerie.png", alt: "Enseigne Boulangerie illuminée" },
 ];
 
+const inspirations = [
+  { title: "Lettrage LED illuminé", image: "/images/services/lettrage-illumine.png" },
+  { title: "Enseigne commerciale", image: "/images/realisations/realisation-7.png" },
+  { title: "Habillage vinyle", image: "/images/services/habillage-deja-vu.png" },
+  { title: "Display promotionnel", image: "/images/services/display-epilys.png" },
+  { title: "Roll-up événementiel", image: "/images/realisations/realisation-6.png" },
+  { title: "Grand format", image: "/images/services/grand-format-epilys.png" },
+];
+
 const businessInfo = {
   name: "ilan247",
   website: "https://www.ilan247.com/",
   image: "https://www.ilan247.com/images/atelier-ilan247.png",
-  phoneDisplay: "+1 (514) 000-0000",
-  phoneE164: "+1-514-000-0000",
-  facebook: "https://www.facebook.com/",
+  phoneDisplay: "(541) 653-7360",
+  phoneE164: "+1-541-653-7360",
+  email: "info@ilan247.com",
+  facebook: "",
   streetAddress: "8558 Bd Pie-IX",
   city: "Montréal",
   region: "QC",
@@ -194,6 +211,54 @@ function App() {
   const [heroImageIndex, setHeroImageIndex] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [formStatus, setFormStatus] = useState("idle");
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatus("sending");
+
+    const formData = new FormData(e.target);
+
+    // --- OPTION 1 : Web3Forms (recommandé) ---
+    // Allez sur https://web3forms.com, entrez info@ilan247.com,
+    // puis remplacez la clé ci-dessous par celle que vous recevrez par email.
+    const WEB3FORMS_KEY = "b2c17fe2-d001-43eb-9165-6c7efe9215ca";
+
+    if (WEB3FORMS_KEY !== "VOTRE_CLE_ICI") {
+      formData.append("access_key", WEB3FORMS_KEY);
+      formData.append("subject", "Nouvelle demande de soumission - ilan247.com");
+      formData.append("from_name", "Site web ilan247");
+
+      try {
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        if (data.success) {
+          setFormStatus("success");
+          e.target.reset();
+        } else {
+          setFormStatus("error");
+        }
+      } catch {
+        setFormStatus("error");
+      }
+      return;
+    }
+
+    // --- OPTION 2 : Fallback mailto (en attendant la clé Web3Forms) ---
+    const name = formData.get("name") || "";
+    const email = formData.get("email") || "";
+    const phone = formData.get("phone") || "";
+    const project = formData.get("project") || "";
+    const message = formData.get("message") || "";
+
+    const body = `Nom: ${name}%0AEmail: ${email}%0ATéléphone: ${phone}%0AType de projet: ${project}%0A%0AMessage:%0A${message}`;
+    window.location.href = `mailto:${businessInfo.email}?subject=Demande de soumission - ${name}&body=${body}`;
+    setFormStatus("success");
+    e.target.reset();
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -264,7 +329,7 @@ function App() {
     telephone: businessInfo.phoneE164,
     priceRange: "$$",
     areaServed: businessInfo.serviceAreas,
-    sameAs: [businessInfo.facebook],
+    sameAs: [],
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
@@ -436,6 +501,64 @@ function App() {
                 Demander une soumission
               </a>
             </div>
+            <div className="hero-anim mt-12 flex flex-wrap items-center gap-6 text-sm text-slate-300">
+              <div className="flex items-center gap-2">
+                <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+                <span>5.0/5 sur Google</span>
+              </div>
+              <div className="h-4 w-px bg-slate-400/50 hidden sm:block"></div>
+              <div className="flex items-center gap-2">
+                <Clock3 className="h-4 w-4" />
+                <span>Livraison rapide</span>
+              </div>
+              <div className="h-4 w-px bg-slate-400/50 hidden sm:block"></div>
+              <div className="flex items-center gap-2">
+                <span className="text-brand-400">✓</span>
+                <span>Garantie qualité</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-accent-700 py-6">
+          <div className="section-container">
+            <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16">
+              <div className="flex items-center gap-2 text-white/90">
+                <Clock3 className="h-5 w-5 text-brand-400" />
+                <span className="text-sm font-medium">Disponible 24/7</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90">
+                <MapPin className="h-5 w-5 text-brand-400" />
+                <span className="text-sm font-medium">Montréal et environs</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90">
+                <Phone className="h-5 w-5 text-brand-400" />
+                <span className="text-sm font-medium">{businessInfo.phoneDisplay}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white py-12 sm:py-16">
+          <div className="section-container">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="reveal-on-scroll text-center">
+                <p className="font-['Rajdhani'] text-4xl font-bold text-brand-600">500+</p>
+                <p className="mt-1 text-sm text-slate-600">Projets réalisés</p>
+              </div>
+              <div className="reveal-on-scroll text-center">
+                <p className="font-['Rajdhani'] text-4xl font-bold text-brand-600">24/7</p>
+                <p className="mt-1 text-sm text-slate-600">Disponibilité</p>
+              </div>
+              <div className="reveal-on-scroll text-center">
+                <p className="font-['Rajdhani'] text-4xl font-bold text-brand-600">100%</p>
+                <p className="mt-1 text-sm text-slate-600">Clients satisfaits</p>
+              </div>
+              <div className="reveal-on-scroll text-center">
+                <p className="font-['Rajdhani'] text-4xl font-bold text-brand-600">48h</p>
+                <p className="mt-1 text-slate-600 text-sm">Délai moyen</p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -470,7 +593,7 @@ function App() {
           </div>
         </section>
 
-        <section id="produits" className="bg-white py-16 sm:py-20">
+        <section id="produits" className="py-16 sm:py-20">
           <div className="section-container">
             <div className="reveal-on-scroll mb-8">
               <h2 className="section-title">Nos produits et services</h2>
@@ -481,22 +604,23 @@ function App() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => (
                 <article key={service.title} className="group reveal-on-scroll card interactive-card overflow-hidden p-0">
-                  <div className="aspect-[4/3] overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={service.image}
                       alt={`Exemple de ${service.title} réalisé par ilan247 à Montréal`}
-                      className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
                       loading="lazy"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                   <div className="p-5">
-                    <h3 className="font-['Rajdhani'] text-xl font-semibold">{service.title}</h3>
+                    <h3 className="font-['Rajdhani'] text-xl font-semibold group-hover:text-brand-600 transition-colors">{service.title}</h3>
                     <p className="mt-2 text-slate-600">{service.description}</p>
                     <a
                       href="#contact"
                       className="mt-4 inline-block font-semibold text-brand-600 hover:text-brand-700"
                     >
-                      Demander une soumission
+                      Demander une soumission →
                     </a>
                   </div>
                 </article>
@@ -526,6 +650,38 @@ function App() {
           </div>
         </section>
 
+        <section className="py-16 sm:py-20 bg-white">
+          <div className="section-container">
+            <div className="reveal-on-scroll mb-8 text-center">
+              <h2 className="section-title">Inspirations & Tendances</h2>
+              <p className="section-subtitle mx-auto">
+                Découvrez nos dernières réalisations et inspirations pour vos projets d'affichage et de signalétique.
+              </p>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {inspirations.map((item, index) => (
+                <article 
+                  key={index} 
+                  className="group reveal-on-scroll relative overflow-hidden rounded-2xl cursor-pointer"
+                >
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <h3 className="font-['Rajdhani'] text-xl font-bold text-white">{item.title}</h3>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="py-16 sm:py-20">
           <div className="section-container">
             <div className="reveal-on-scroll mb-8">
@@ -536,10 +692,12 @@ function App() {
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {processSteps.map((step, index) => (
-                <article key={step.title} className="reveal-on-scroll card p-5">
-                  <p className="text-sm font-semibold text-accent-600">Étape {index + 1}</p>
-                  <h3 className="mt-2 font-['Rajdhani'] text-lg font-semibold">{step.title}</h3>
-                  <p className="mt-2 text-slate-600">{step.desc}</p>
+                <article key={step.title} className="reveal-on-scroll card interactive-card p-6 text-center">
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-brand-100">
+                    <span className="font-['Rajdhani'] text-2xl font-bold text-brand-600">{index + 1}</span>
+                  </div>
+                  <h3 className="font-['Rajdhani'] text-lg font-semibold">{step.title}</h3>
+                  <p className="mt-2 text-slate-600 text-sm">{step.desc}</p>
                 </article>
               ))}
             </div>
@@ -565,7 +723,7 @@ function App() {
             </div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {googleReviews.map((item) => (
-                <article key={item.author} className="reveal-on-scroll card p-5">
+                <article key={item.author} className="reveal-on-scroll card interactive-card p-5">
                   <div className="flex items-center justify-between">
                     <div className="flex gap-0.5 text-amber-400">
                       {[...Array(item.stars)].map((_, i) => (
@@ -573,15 +731,22 @@ function App() {
                       ))}
                     </div>
                     {item.localGuide && (
-                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
                         Local Guide
                       </span>
                     )}
                   </div>
-                  <p className="mt-4 text-slate-700">"{item.quote}"</p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <p className="text-sm font-semibold text-slate-800">{item.author}</p>
-                    <p className="text-xs text-slate-500">{item.date}</p>
+                  <p className="mt-4 text-slate-700 leading-relaxed">"{item.quote}"</p>
+                  <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-brand-100 flex items-center justify-center">
+                        <span className="font-bold text-brand-600">{item.author.charAt(0)}</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-800">{item.author}</p>
+                        <p className="text-xs text-slate-500">{item.date}</p>
+                      </div>
+                    </div>
                   </div>
                 </article>
               ))}
@@ -598,11 +763,26 @@ function App() {
                 entreprises à se démarquer. Notre équipe vous accompagne de la maquette à la
                 fabrication, avec une disponibilité 24/7.
               </p>
-              <ul className="mt-6 space-y-3 text-slate-700">
-                <li>- Accompagnement personnalisé pour chaque projet</li>
-                <li>- Qualité d'impression constante et finition soignée</li>
-                <li>- Délais rapides pour vos urgences marketing</li>
-              </ul>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                {values.map((value) => (
+                  <div key={value.title} className="flex items-start gap-3">
+                    <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100">
+                      <span className="text-brand-600 font-bold text-sm">{value.title[0]}</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-900">{value.title}</h4>
+                      <p className="text-sm text-slate-600">{value.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-8 rounded-xl bg-accent-50 p-5 border border-accent-100">
+                <h4 className="font-['Rajdhani'] text-lg font-bold text-accent-700">Notre mission</h4>
+                <p className="mt-2 text-slate-700">
+                  Leader en matière d'affichage, de signalétique et d'impression à Montréal. 
+                  Offrir un service personnalisé et des produits de qualité qui dépassent les attentes de nos clients.
+                </p>
+              </div>
             </div>
             <img
               src="/images/equipe-ilan247-installation.png"
@@ -637,46 +817,80 @@ function App() {
               <p className="section-subtitle mt-2">
                 Besoin d'un devis rapide ? Envoyez-nous les détails de votre projet.
               </p>
-              <form className="mt-6 space-y-4">
-                <input
-                  type="text"
-                  placeholder="Nom *"
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
-                  required
-                />
-                <input
-                  type="email"
-                  placeholder="Adresse e-mail *"
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
-                  required
-                />
-                <input
-                  type="tel"
-                  placeholder="Téléphone"
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
-                />
-                <select className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2">
-                  <option>Type de projet</option>
-                  <option>Roll-up</option>
-                  <option>X-Banner</option>
-                  <option>Impression grand format</option>
-                  <option>Lettrage</option>
-                  <option>Habillage vinyle</option>
-                </select>
-                <textarea
-                  placeholder="Message *"
-                  rows={4}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
-                  required
-                />
-                <input
-                  type="file"
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-500"
-                />
-                <button type="submit" className="btn-primary w-full">
-                  <Send className="mr-2 h-4 w-4" /> Envoyer la demande
-                </button>
-              </form>
+              {formStatus === "success" ? (
+                <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-6 text-center">
+                  <p className="font-['Rajdhani'] text-2xl font-bold text-accent-600">Merci !</p>
+                  <p className="mt-2 text-slate-600">
+                    Votre demande a bien été envoyée. Nous vous répondrons dans les plus brefs délais.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setFormStatus("idle")}
+                    className="btn-primary mt-4"
+                  >
+                    Envoyer une autre demande
+                  </button>
+                </div>
+              ) : (
+                <form className="mt-6 space-y-4" onSubmit={handleFormSubmit}>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Nom *"
+                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
+                    required
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Adresse e-mail *"
+                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
+                    required
+                  />
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Téléphone"
+                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
+                  />
+                  <select name="project" className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2">
+                    <option>Type de projet</option>
+                    <option>Roll-up</option>
+                    <option>X-Banner</option>
+                    <option>Impression grand format</option>
+                    <option>Lettrage</option>
+                    <option>Habillage vinyle</option>
+                  </select>
+                  <textarea
+                    name="message"
+                    placeholder="Message *"
+                    rows={4}
+                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
+                    required
+                  />
+                  <input
+                    type="file"
+                    name="attachment"
+                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-500"
+                  />
+                  {formStatus === "error" && (
+                    <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                      Une erreur est survenue. Veuillez réessayer ou nous contacter par courriel.
+                    </p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={formStatus === "sending"}
+                    className="btn-primary w-full disabled:opacity-60"
+                  >
+                    {formStatus === "sending" ? (
+                      "Envoi en cours..."
+                    ) : (
+                      <><Send className="mr-2 h-4 w-4" /> Envoyer la demande</>
+                    )}
+                  </button>
+                </form>
+              )}
             </div>
 
             <div className="reveal-on-scroll card p-6 sm:p-8">
@@ -692,18 +906,20 @@ function App() {
                 <p className="flex items-center gap-3">
                   <Clock3 className="h-5 w-5 text-accent-600" /> Disponible 24/7
                 </p>
+                <p className="flex items-center gap-3">
+                  <Send className="h-5 w-5 text-accent-600" />
+                  <a href={`mailto:${businessInfo.email}`} className="text-brand-600 hover:text-brand-700">{businessInfo.email}</a>
+                </p>
                 <p className="rounded-xl bg-slate-100 p-3 text-sm">
                   <strong>Zones desservies:</strong> Montréal, Laval, Longueuil, Rive-Nord et
                   Rive-Sud.
                 </p>
               </div>
               <a
-                href={businessInfo.facebook}
-                target="_blank"
-                rel="noreferrer"
+                href={`mailto:${businessInfo.email}`}
                 className="btn-secondary mt-6"
               >
-                Visiter Facebook
+                Nous écrire par courriel
               </a>
 
               <iframe
@@ -753,43 +969,84 @@ function App() {
         </section>
       </main>
 
-      <footer className="bg-slate-900 py-10 text-slate-200">
-        <div className="section-container flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="font-['Rajdhani'] text-3xl font-bold tracking-wide text-white">
-              <span className="text-brand-600">ilan</span>
-              <span className="text-accent-500">247</span>
-            </p>
-            <p className="mt-1 text-sm text-slate-300">
-              Supports publicitaires modernes pour entreprises ambitieuses.
-            </p>
+      <footer className="bg-slate-900 py-16 text-slate-200">
+        <div className="section-container">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <p className="font-['Rajdhani'] text-3xl font-bold tracking-wide text-white">
+                <span className="text-brand-600">ilan</span>
+                <span className="text-accent-500">247</span>
+              </p>
+              <p className="mt-3 text-sm text-slate-300">
+                Votre partenaire de confiance en affichage, signalétique et impression à Montréal.
+              </p>
+              <a href={`mailto:${businessInfo.email}`} className="mt-4 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition">
+                <Send className="h-4 w-4" /> {businessInfo.email}
+              </a>
+            </div>
+            <div>
+              <h4 className="font-['Rajdhani'] text-lg font-bold text-white">Services</h4>
+              <ul className="mt-4 space-y-2 text-sm">
+                <li><a href="#produits" className="text-slate-400 hover:text-white transition">Roll-up</a></li>
+                <li><a href="#produits" className="text-slate-400 hover:text-white transition">X-Banner</a></li>
+                <li><a href="#produits" className="text-slate-400 hover:text-white transition">Impression grand format</a></li>
+                <li><a href="#produits" className="text-slate-400 hover:text-white transition">Lettrage</a></li>
+                <li><a href="#produits" className="text-slate-400 hover:text-white transition">Habillage vinyle</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-['Rajdhani'] text-lg font-bold text-white">Informations</h4>
+              <ul className="mt-4 space-y-2 text-sm">
+                <li><a href="#apropos" className="text-slate-400 hover:text-white transition">À propos</a></li>
+                <li><a href="#realisations" className="text-slate-400 hover:text-white transition">Réalisations</a></li>
+                <li><a href="#temoignages" className="text-slate-400 hover:text-white transition">Témoignages</a></li>
+                <li><a href="#contact" className="text-slate-400 hover:text-white transition">Contact</a></li>
+                <li><a href="/roll-up-montreal" className="text-slate-400 hover:text-white transition">Roll-up Montréal</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-['Rajdhani'] text-lg font-bold text-white">Contact</h4>
+              <ul className="mt-4 space-y-3 text-sm">
+                <li className="flex items-center gap-2 text-slate-400">
+                  <MapPin className="h-4 w-4 text-brand-500" />
+                  {businessInfo.streetAddress}, {businessInfo.city}
+                </li>
+                <li className="flex items-center gap-2 text-slate-400">
+                  <Phone className="h-4 w-4 text-brand-500" />
+                  {businessInfo.phoneDisplay}
+                </li>
+                <li className="flex items-center gap-2 text-slate-400">
+                  <Clock3 className="h-4 w-4 text-brand-500" />
+                  Disponible 24/7
+                </li>
+                <li className="flex items-center gap-2 text-slate-400">
+                  <Send className="h-4 w-4 text-brand-500" />
+                  <a href={`mailto:${businessInfo.email}`} className="hover:text-white transition">{businessInfo.email}</a>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-4 text-sm">
-            <a href="#accueil" className="hover:text-white">
-              Accueil
-            </a>
-            <a href="#produits" className="hover:text-white">
-              Nos Produits
-            </a>
-            <a href="#apropos" className="hover:text-white">
-              À Propos
-            </a>
-            <a href="#contact" className="hover:text-white">
-              Contact
-            </a>
-            <a href="#realisations" className="hover:text-white">
-              Réalisations
-            </a>
-            <a href="/roll-up-montreal" className="hover:text-white">
-              Roll-up Montréal
-            </a>
-            <a href="#coordonnees" className="hover:text-white">
-              Coordonnées
-            </a>
+          <div className="mt-10 border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-slate-500">© {new Date().getFullYear()} ilan247. Tous droits réservés.</p>
+            <div className="flex gap-4 text-xs text-slate-500">
+              <a href="/politique-confidentialite" className="hover:text-white transition">Politique de confidentialité</a>
+              <a href="/conditions-utilisation" className="hover:text-white transition">Conditions d'utilisation</a>
+            </div>
           </div>
-          <p className="text-xs text-slate-400">© {new Date().getFullYear()} ilan247. Tous droits réservés.</p>
         </div>
       </footer>
+
+      <a
+        href={`https://wa.me/15416537360?text=${encodeURIComponent("Bonjour, je souhaite obtenir une soumission pour un projet publicitaire.")}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-110 hover:shadow-xl"
+        aria-label="Nous contacter sur WhatsApp"
+      >
+        <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+      </a>
     </div>
   );
 }
