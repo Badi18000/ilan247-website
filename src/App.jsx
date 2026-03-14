@@ -492,7 +492,7 @@ function App() {
             className="hero-bg absolute inset-0 h-full w-full object-cover opacity-65 brightness-110"
             poster={heroImageSources[0]}
           >
-            <source src="/videos/hero-video.mp4" type="video/mp4" />
+            <source src="/videos/impression-publicitaire-montreal-ilan247.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-r from-accent-700/45 via-slate-900/40 to-slate-900/35" />
           <div className="section-container relative flex min-h-[78vh] flex-col justify-center py-20">
