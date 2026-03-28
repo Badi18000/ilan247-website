@@ -14,6 +14,67 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
+function AnimatedCheck() {
+  return (
+    <div className="check-wrapper mx-auto mb-4 h-20 w-20">
+      <svg viewBox="0 0 52 52" fill="none" aria-hidden="true">
+        <circle
+          className="check-circle"
+          cx="26" cy="26" r="24"
+          stroke="#2d9a4e"
+          strokeWidth="2"
+        />
+        <path
+          className="check-path"
+          d="M14 27l8 8 16-16"
+          stroke="#2d9a4e"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  );
+}
+
+function Confetti() {
+  const colors = ['#e87c18', '#2d9a4e', '#f59e0b', '#3b82f6', '#ec4899', '#8b5cf6'];
+  const pieces = Array.from({ length: 22 }, (_, i) => ({
+    id: i,
+    left: `${8 + (i * 4.1) % 84}%`,
+    bottom: `${20 + (i % 4) * 8}%`,
+    color: colors[i % colors.length],
+    w: 6 + (i % 3) * 3,
+    h: 7 + (i % 4) * 2,
+    circle: i % 5 === 0,
+    delay: `${(i * 0.038).toFixed(3)}s`,
+    dur: `${(0.65 + (i % 5) * 0.07).toFixed(2)}s`,
+    rot: `${120 + (i * 23) % 360}deg`,
+  }));
+
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-xl">
+      {pieces.map((p) => (
+        <span
+          key={p.id}
+          className="confetti-piece"
+          style={{
+            left: p.left,
+            bottom: p.bottom,
+            width: p.w,
+            height: p.h,
+            background: p.color,
+            borderRadius: p.circle ? '50%' : '2px',
+            '--delay': p.delay,
+            '--dur': p.dur,
+            '--rot': p.rot,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 const services = [
   {
     image: "/images/realisations/realisation-4.png",
@@ -273,22 +334,23 @@ function App() {
     const ctx = gsap.context(() => {
       if (!prefersReducedMotion) {
         gsap.from(".hero-anim", {
-          y: 30,
+          y: 40,
           opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          stagger: 0.12,
+          duration: 0.9,
+          ease: "power4.out",
+          stagger: 0.14,
         });
 
         gsap.utils.toArray(".reveal-on-scroll").forEach((item) => {
           gsap.from(item, {
-            y: 24,
+            y: 28,
             opacity: 0,
-            duration: 0.7,
+            scale: 0.97,
+            duration: 0.65,
             ease: "power3.out",
             scrollTrigger: {
               trigger: item,
-              start: "top 85%",
+              start: "top 88%",
             },
           });
         });
@@ -630,7 +692,7 @@ function App() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => (
                 <article key={service.title} className="group reveal-on-scroll card interactive-card overflow-hidden p-0">
-                  <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                  <div className="img-shine relative aspect-[4/3] overflow-hidden bg-slate-100">
                     <img
                       src={service.image}
                       alt={`Exemple de ${service.title} réalisé par ilan247 à Montréal`}
@@ -691,7 +753,7 @@ function App() {
                   key={index} 
                   className="group reveal-on-scroll relative overflow-hidden rounded-2xl cursor-pointer"
                 >
-                  <div className="aspect-[4/3] overflow-hidden bg-slate-100">
+                  <div className="img-shine aspect-[4/3] overflow-hidden bg-slate-100">
                     <img
                       src={item.image}
                       alt={item.title}
@@ -848,15 +910,17 @@ function App() {
               </p>
               <div aria-live="polite" aria-atomic="true">
                 {formStatus === "success" ? (
-                  <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-6 text-center">
-                    <p className="font-['Rajdhani'] text-2xl font-bold text-accent-600">Merci !</p>
-                    <p className="mt-2 text-slate-600">
-                      Votre demande a bien été envoyée. Nous vous répondrons dans les plus brefs délais.
+                  <div className="relative mt-6 overflow-hidden rounded-xl border border-green-200 bg-green-50 px-6 py-10 text-center">
+                    <Confetti />
+                    <AnimatedCheck />
+                    <p className="font-['Rajdhani'] text-3xl font-bold text-accent-700">Demande envoyée !</p>
+                    <p className="mx-auto mt-3 max-w-xs text-slate-600">
+                      On vous répond dans les plus brefs délais — souvent le jour même.
                     </p>
                     <button
                       type="button"
                       onClick={() => setFormStatus("idle")}
-                      className="btn-primary mt-4"
+                      className="btn-primary mt-6"
                     >
                       Envoyer une autre demande
                     </button>
@@ -1094,12 +1158,17 @@ function App() {
         href={`https://wa.me/15416537360?text=${encodeURIComponent("Bonjour, je souhaite obtenir une soumission pour un projet publicitaire.")}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-110 hover:shadow-xl"
+        className="wa-btn fixed bottom-6 right-6 z-50 flex items-center justify-end"
         aria-label="Nous contacter sur WhatsApp"
       >
-        <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
+        <span className="wa-tooltip mr-3 whitespace-nowrap rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-lg">
+          Devis gratuit →
+        </span>
+        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl">
+          <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+          </svg>
+        </span>
       </a>
     </div>
   );
