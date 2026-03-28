@@ -77,37 +77,37 @@ function Confetti() {
 
 const services = [
   {
-    image: "/images/realisations/realisation-4.png",
+    image: "/images/realisations/realisation-4.webp",
     title: "Roll-up",
     description:
       "Idéal pour salons, conférences et points de vente. Installation simple et rendu professionnel.",
   },
   {
-    image: "/images/realisations/realisation-5.png",
+    image: "/images/realisations/realisation-5.webp",
     title: "X-Banner",
     description:
       "Support léger et économique pour mettre en valeur vos promotions et offres saisonnières.",
   },
   {
-    image: "/images/services/grand-format-epilys.png",
+    image: "/images/services/grand-format-epilys.webp",
     title: "Impression grand format",
     description:
       "Impressions nettes et durables pour affiches, panneaux et habillages commerciaux.",
   },
   {
-    image: "/images/services/lettrage-boulangerie.png",
+    image: "/images/services/lettrage-boulangerie.webp",
     title: "Lettrage",
     description:
       "Valorisez vos vitrines, véhicules et espaces avec un lettrage propre et lisible.",
   },
   {
-    image: "/images/services/habillage-deja-vu.png",
+    image: "/images/services/habillage-deja-vu.webp",
     title: "Habillage vinyle",
     description:
       "Transformation visuelle de vitrines et surfaces pour renforcer votre présence locale.",
   },
   {
-    image: "/images/services/display-epilys.png",
+    image: "/images/services/display-epilys.webp",
     title: "Cartes d'affaires & Flyers",
     description:
       "Supports imprimés essentiels pour présenter votre marque et générer de nouveaux contacts.",
@@ -213,38 +213,38 @@ const values = [
 ];
 
 const heroImageSources = [
-  "/images/atelier-ilan247.png",
+  "/images/atelier-ilan247.webp",
   "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?auto=format&fit=crop&w=2000&q=80",
 ];
 
 const realizationsImages = [
-  { src: "/images/realisations/realisation-1.png", alt: "Panneaux ÉPILYS supermarché" },
-  { src: "/images/realisations/realisation-2.png", alt: "Panneau publicitaire imprimé grand format" },
-  { src: "/images/realisations/realisation-3.png", alt: "Lettrage Pâtisserie et Boulangerie" },
-  { src: "/images/realisations/realisation-6.png", alt: "Roll-up événementiel imprimé par ilan247" },
-  { src: "/images/realisations/realisation-7.png", alt: "Enseigne extérieure commerciale" },
-  { src: "/images/services/enseigne-pizza.png", alt: "Enseigne lumineuse storefront réalisée par ilan247" },
-  { src: "/images/services/enseigne-service-client.png", alt: "Installation enseigne suspendue en magasin" },
-  { src: "/images/services/lettrage-illumine.png", alt: "Lettrage illuminé sur mesure" },
-  { src: "/images/services/grand-format-epilys.png", alt: "Enseigne circulaire grand format" },
-  { src: "/images/services/habillage-deja-vu.png", alt: "Installation enseigne DÉJÀ VU" },
-  { src: "/images/services/display-epilys.png", alt: "Display promotionnel imprimé" },
-  { src: "/images/services/lettrage-boulangerie.png", alt: "Enseigne Boulangerie illuminée" },
+  { src: "/images/realisations/realisation-1.webp", alt: "Panneaux ÉPILYS supermarché" },
+  { src: "/images/realisations/realisation-2.webp", alt: "Panneau publicitaire imprimé grand format" },
+  { src: "/images/realisations/realisation-3.webp", alt: "Lettrage Pâtisserie et Boulangerie" },
+  { src: "/images/realisations/realisation-6.webp", alt: "Roll-up événementiel imprimé par ilan247" },
+  { src: "/images/realisations/realisation-7.webp", alt: "Enseigne extérieure commerciale" },
+  { src: "/images/services/enseigne-pizza.webp", alt: "Enseigne lumineuse storefront réalisée par ilan247" },
+  { src: "/images/services/enseigne-service-client.webp", alt: "Installation enseigne suspendue en magasin" },
+  { src: "/images/services/lettrage-illumine.webp", alt: "Lettrage illuminé sur mesure" },
+  { src: "/images/services/grand-format-epilys.webp", alt: "Enseigne circulaire grand format" },
+  { src: "/images/services/habillage-deja-vu.webp", alt: "Installation enseigne DÉJÀ VU" },
+  { src: "/images/services/display-epilys.webp", alt: "Display promotionnel imprimé" },
+  { src: "/images/services/lettrage-boulangerie.webp", alt: "Enseigne Boulangerie illuminée" },
 ];
 
 const inspirations = [
-  { title: "Lettrage LED illuminé", image: "/images/services/lettrage-illumine.png" },
-  { title: "Enseigne commerciale", image: "/images/realisations/realisation-7.png" },
-  { title: "Habillage vinyle", image: "/images/services/habillage-deja-vu.png" },
-  { title: "Display promotionnel", image: "/images/services/display-epilys.png" },
-  { title: "Roll-up événementiel", image: "/images/realisations/realisation-6.png" },
-  { title: "Grand format", image: "/images/services/grand-format-epilys.png" },
+  { title: "Lettrage LED illuminé", image: "/images/services/lettrage-illumine.webp" },
+  { title: "Enseigne commerciale", image: "/images/realisations/realisation-7.webp" },
+  { title: "Habillage vinyle", image: "/images/services/habillage-deja-vu.webp" },
+  { title: "Display promotionnel", image: "/images/services/display-epilys.webp" },
+  { title: "Roll-up événementiel", image: "/images/realisations/realisation-6.webp" },
+  { title: "Grand format", image: "/images/services/grand-format-epilys.webp" },
 ];
 
 const businessInfo = {
   name: "ilan247",
   website: "https://www.ilan247.com/",
-  image: "https://www.ilan247.com/images/atelier-ilan247.png",
+  image: "https://www.ilan247.com/images/atelier-ilan247.webp",
   phoneDisplay: "(514) 653-7360",
   phoneE164: "+1-514-653-7360",
   email: "info@ilan247.com",
@@ -875,7 +875,7 @@ function App() {
               </div>
             </div>
             <img
-              src="/images/equipe-ilan247-installation.png"
+              src="/images/equipe-ilan247-installation.webp"
               alt="Équipe ilan247 en installation d'une enseigne DÉJÀ VU"
               className="reveal-on-scroll h-full min-h-[320px] w-full rounded-2xl object-cover shadow-lg"
             />
