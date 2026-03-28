@@ -184,8 +184,8 @@ const businessInfo = {
   name: "ilan247",
   website: "https://www.ilan247.com/",
   image: "https://www.ilan247.com/images/atelier-ilan247.png",
-  phoneDisplay: "(541) 653-7360",
-  phoneE164: "+1-541-653-7360",
+  phoneDisplay: "(514) 653-7360",
+  phoneE164: "+1-514-653-7360",
   email: "info@ilan247.com",
   facebook: "",
   streetAddress: "8558 Bd Pie-IX",
@@ -230,11 +230,16 @@ function App() {
       formData.append("subject", "Nouvelle demande de soumission - ilan247.com");
       formData.append("from_name", "Site web ilan247");
 
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+
       try {
         const res = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
           body: formData,
+          signal: controller.signal,
         });
+        clearTimeout(timeout);
         const data = await res.json();
         if (data.success) {
           setFormStatus("success");
@@ -243,6 +248,7 @@ function App() {
           setFormStatus("error");
         }
       } catch {
+        clearTimeout(timeout);
         setFormStatus("error");
       }
       return;
@@ -262,39 +268,43 @@ function App() {
   };
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".hero-anim", {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.12,
-      });
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      gsap.utils.toArray(".reveal-on-scroll").forEach((item) => {
-        gsap.from(item, {
-          y: 24,
+    const ctx = gsap.context(() => {
+      if (!prefersReducedMotion) {
+        gsap.from(".hero-anim", {
+          y: 30,
           opacity: 0,
-          duration: 0.7,
+          duration: 0.8,
           ease: "power3.out",
+          stagger: 0.12,
+        });
+
+        gsap.utils.toArray(".reveal-on-scroll").forEach((item) => {
+          gsap.from(item, {
+            y: 24,
+            opacity: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 85%",
+            },
+          });
+        });
+
+        gsap.to(".hero-bg", {
+          scale: 1.07,
+          yPercent: 6,
+          ease: "none",
           scrollTrigger: {
-            trigger: item,
-            start: "top 85%",
+            trigger: "#accueil",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
           },
         });
-      });
-
-      gsap.to(".hero-bg", {
-        scale: 1.07,
-        yPercent: 6,
-        ease: "none",
-        scrollTrigger: {
-          trigger: "#accueil",
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
+      }
     });
 
     return () => ctx.revert();
@@ -620,12 +630,13 @@ function App() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => (
                 <article key={service.title} className="group reveal-on-scroll card interactive-card overflow-hidden p-0">
-                  <div className="relative aspect-[4/3] overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
                     <img
                       src={service.image}
                       alt={`Exemple de ${service.title} réalisé par ilan247 à Montréal`}
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
                       loading="lazy"
+                      onError={(e) => { e.currentTarget.style.opacity = "0"; }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
@@ -658,8 +669,8 @@ function App() {
           <div className="realisations-marquee">
             <div className="realisations-track">
               {[...realizationsImages, ...realizationsImages].map((item, index) => (
-                <figure key={`${item.src}-${index}`} className="realisations-item">
-                  <img src={item.src} alt={item.alt} loading="lazy" />
+                <figure key={`${item.src}-${index}`} className="realisations-item bg-slate-100">
+                  <img src={item.src} alt={item.alt} loading="lazy" onError={(e) => { e.currentTarget.style.opacity = "0"; }} />
                 </figure>
               ))}
             </div>
@@ -680,12 +691,13 @@ function App() {
                   key={index} 
                   className="group reveal-on-scroll relative overflow-hidden rounded-2xl cursor-pointer"
                 >
-                  <div className="aspect-[4/3] overflow-hidden">
+                  <div className="aspect-[4/3] overflow-hidden bg-slate-100">
                     <img
                       src={item.image}
                       alt={item.title}
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
                       loading="lazy"
+                      onError={(e) => { e.currentTarget.style.opacity = "0"; }}
                     />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
@@ -752,7 +764,7 @@ function App() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-4 text-slate-700 leading-relaxed">"{item.quote}"</p>
+                  <p className="mt-4 text-slate-700 leading-relaxed line-clamp-5">"{item.quote}"</p>
                   <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-brand-100 flex items-center justify-center">
@@ -815,9 +827,10 @@ function App() {
             </div>
             <div className="space-y-4">
               {faq.map((item) => (
-                <details key={item.q} className="reveal-on-scroll card p-5">
-                  <summary className="cursor-pointer list-none font-['Rajdhani'] text-lg font-semibold">
+                <details key={item.q} className="reveal-on-scroll card group p-5">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-['Rajdhani'] text-lg font-semibold">
                     {item.q}
+                    <span className="shrink-0 text-brand-600 transition-transform group-open:rotate-45" aria-hidden="true">+</span>
                   </summary>
                   <p className="mt-3 text-slate-600">{item.a}</p>
                 </details>
@@ -833,80 +846,105 @@ function App() {
               <p className="section-subtitle mt-2">
                 Besoin d'un devis rapide ? Envoyez-nous les détails de votre projet.
               </p>
-              {formStatus === "success" ? (
-                <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-6 text-center">
-                  <p className="font-['Rajdhani'] text-2xl font-bold text-accent-600">Merci !</p>
-                  <p className="mt-2 text-slate-600">
-                    Votre demande a bien été envoyée. Nous vous répondrons dans les plus brefs délais.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setFormStatus("idle")}
-                    className="btn-primary mt-4"
-                  >
-                    Envoyer une autre demande
-                  </button>
-                </div>
-              ) : (
-                <form className="mt-6 space-y-4" onSubmit={handleFormSubmit}>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Nom *"
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
-                    required
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Adresse e-mail *"
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
-                    required
-                  />
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Téléphone"
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
-                  />
-                  <select name="project" className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2">
-                    <option>Type de projet</option>
-                    <option>Roll-up</option>
-                    <option>X-Banner</option>
-                    <option>Impression grand format</option>
-                    <option>Lettrage</option>
-                    <option>Habillage vinyle</option>
-                  </select>
-                  <textarea
-                    name="message"
-                    placeholder="Message *"
-                    rows={4}
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
-                    required
-                  />
-                  <input
-                    type="file"
-                    name="attachment"
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-500"
-                  />
-                  {formStatus === "error" && (
-                    <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
-                      Une erreur est survenue. Veuillez réessayer ou nous contacter par courriel.
+              <div aria-live="polite" aria-atomic="true">
+                {formStatus === "success" ? (
+                  <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-6 text-center">
+                    <p className="font-['Rajdhani'] text-2xl font-bold text-accent-600">Merci !</p>
+                    <p className="mt-2 text-slate-600">
+                      Votre demande a bien été envoyée. Nous vous répondrons dans les plus brefs délais.
                     </p>
-                  )}
-                  <button
-                    type="submit"
-                    disabled={formStatus === "sending"}
-                    className="btn-primary w-full disabled:opacity-60"
-                  >
-                    {formStatus === "sending" ? (
-                      "Envoi en cours..."
-                    ) : (
-                      <><Send className="mr-2 h-4 w-4" /> Envoyer la demande</>
+                    <button
+                      type="button"
+                      onClick={() => setFormStatus("idle")}
+                      className="btn-primary mt-4"
+                    >
+                      Envoyer une autre demande
+                    </button>
+                  </div>
+                ) : (
+                  <form className="mt-6 space-y-4" onSubmit={handleFormSubmit} noValidate>
+                    <label className="block">
+                      <span className="sr-only">Nom</span>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Nom *"
+                        autoComplete="name"
+                        className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
+                        required
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="sr-only">Adresse e-mail</span>
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Adresse e-mail *"
+                        autoComplete="email"
+                        className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
+                        required
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="sr-only">Téléphone</span>
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Téléphone"
+                        autoComplete="tel"
+                        className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="sr-only">Type de projet</span>
+                      <select name="project" defaultValue="" className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2">
+                        <option value="" disabled>Type de projet</option>
+                        <option value="Roll-up">Roll-up</option>
+                        <option value="X-Banner">X-Banner</option>
+                        <option value="Impression grand format">Impression grand format</option>
+                        <option value="Lettrage">Lettrage</option>
+                        <option value="Habillage vinyle">Habillage vinyle</option>
+                      </select>
+                    </label>
+                    <label className="block">
+                      <span className="sr-only">Message</span>
+                      <textarea
+                        name="message"
+                        placeholder="Message *"
+                        rows={4}
+                        className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none ring-brand-600 focus:ring-2"
+                        required
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="sr-only">Pièce jointe</span>
+                      <input
+                        type="file"
+                        name="attachment"
+                        accept="image/*,.pdf"
+                        className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-500"
+                      />
+                    </label>
+                    {formStatus === "error" && (
+                      <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                        Une erreur est survenue. Veuillez réessayer ou nous contacter par courriel.
+                      </p>
                     )}
-                  </button>
-                </form>
-              )}
+                    <button
+                      type="submit"
+                      disabled={formStatus === "sending"}
+                      aria-disabled={formStatus === "sending"}
+                      className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {formStatus === "sending" ? (
+                        <><span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" aria-hidden="true" /> Envoi en cours...</>
+                      ) : (
+                        <><Send className="mr-2 h-4 w-4" aria-hidden="true" /> Envoyer la demande</>
+                      )}
+                    </button>
+                  </form>
+                )}
+              </div>
             </div>
 
             <div className="reveal-on-scroll card p-6 sm:p-8">
@@ -922,9 +960,9 @@ function App() {
                 <p className="flex items-center gap-3">
                   <Clock3 className="h-5 w-5 text-accent-600" /> Disponible 24/7
                 </p>
-                <p className="flex items-center gap-3">
-                  <Send className="h-5 w-5 text-accent-600" />
-                  <a href={`mailto:${businessInfo.email}`} className="text-brand-600 hover:text-brand-700">{businessInfo.email}</a>
+                <p className="flex items-center gap-3 min-w-0">
+                  <Send className="h-5 w-5 shrink-0 text-accent-600" />
+                  <a href={`mailto:${businessInfo.email}`} className="truncate text-brand-600 hover:text-brand-700">{businessInfo.email}</a>
                 </p>
                 <p className="rounded-xl bg-slate-100 p-3 text-sm">
                   <strong>Zones desservies:</strong> Montréal, Laval, Longueuil, Rive-Nord et
@@ -996,7 +1034,7 @@ function App() {
               <p className="mt-3 text-sm text-slate-300">
                 Votre partenaire de confiance en affichage, signalétique et impression à Montréal.
               </p>
-              <a href={`mailto:${businessInfo.email}`} className="mt-4 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition">
+              <a href={`mailto:${businessInfo.email}`} className="mt-4 inline-flex min-w-0 items-center gap-2 text-sm text-slate-400 hover:text-white transition">
                 <Send className="h-4 w-4" /> {businessInfo.email}
               </a>
             </div>
